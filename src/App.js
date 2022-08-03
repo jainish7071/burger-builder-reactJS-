@@ -1,6 +1,6 @@
 import classes from "./App.module.css";
-import Layout from "./Components/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
+import Layout from "./containers/Layout/Layout";
 
 function App() {
   return (
