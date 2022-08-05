@@ -6,7 +6,8 @@ class OrderSummary extends Component {
     const ingredientSummary = Object.keys(this.props.ingredients).map((igKey) => {
       return (
         <li key={igKey}>
-          <span style={{ textTransform: "capitalize" }}>{igKey}</span> : {this.props.ingredients[igKey]}
+          <span style={{ textTransform: "capitalize" }}>{igKey}</span> :{" "}
+          {this.props.ingredients[igKey]}
         </li>
       );
     });
@@ -22,7 +23,7 @@ class OrderSummary extends Component {
         <Button btnType="Danger" clicked={this.props.purchaseCancelled}>
           Cancel
         </Button>
-        <Button btnType="Success" clicked={this.props.purhcaseContinued}>
+        <Button btnType="Success" clicked={this.props.purchaseContinued}>
           Continue
         </Button>
       </>

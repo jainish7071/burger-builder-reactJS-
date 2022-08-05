@@ -52,11 +52,11 @@ class BurgerBuilder extends Component {
     });
   }
 
-  purchasehandler = () => {
+  purchaseHandler = () => {
     this.setState({ purchasing: true });
   };
 
-  addIngredienHandler = (type) => {
+  addIngredientHandler = (type) => {
     const oldCount = this.state.ingredients[type];
     const updatedCount = oldCount + 1;
     const updatedIngredients = {
@@ -72,7 +72,7 @@ class BurgerBuilder extends Component {
     });
     this.updatePurchaseState(updatedIngredients);
   };
-  removeIngredienHandler = (type) => {
+  removeIngredientHandler = (type) => {
     const oldCount = this.state.ingredients[type];
     if (oldCount <= 0) {
       return;
@@ -92,40 +92,18 @@ class BurgerBuilder extends Component {
     this.updatePurchaseState(updatedIngredients);
   };
 
-  purchaseCancelhandler = () => {
+  purchaseCancelHandler = () => {
     this.setState({ purchasing: false });
   };
 
   purchaseContinueHandler = () => {
-    this.setState({ loading: true });
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: "jainish kunjadiya",
-        address: {
-          street: "test street",
-          zipCode: "45546",
-          country: "Germany",
-        },
-        email: "test@test.com",
-        deliveryMethod: "fastest",
-      },
-    };
-    axios
-      .post("/orders.json", order)
-      .then((response) => {
-        this.setState({
-          loading: false,
-          purchasing: false,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          loading: false,
-          purchasing: false,
-        });
-      });
+    const queryParams = [];
+    for (let i in this.state.ingredients) {
+      queryParams.push(encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i]));
+    }
+    queryParams.push("price=" + this.state.totalPrice);
+    const queryString = queryParams.join("&");
+    this.props.history.push({ pathname: "/checkout", search: "?" + queryString });
   };
 
   render() {
@@ -141,8 +119,8 @@ class BurgerBuilder extends Component {
         <OrderSummary
           price={this.state.totalPrice}
           ingredients={this.state.ingredients}
-          purchaseCancelled={this.purchaseCancelhandler}
-          purhcaseContinued={this.purchaseContinueHandler}
+          purchaseCancelled={this.purchaseCancelHandler}
+          purchaseContinued={this.purchaseContinueHandler}
         />
       );
     }
@@ -159,9 +137,9 @@ class BurgerBuilder extends Component {
         <>
           <Burger ingredients={this.state.ingredients} />
           <BuildControls
-            ordered={this.purchasehandler}
-            ingredientAdded={this.addIngredienHandler}
-            ingredientRemoved={this.removeIngredienHandler}
+            ordered={this.purchaseHandler}
+            ingredientAdded={this.addIngredientHandler}
+            ingredientRemoved={this.removeIngredientHandler}
             disabled={disableInfo}
             price={this.state.totalPrice}
             purchasable={this.state.purchasable}
@@ -171,7 +149,7 @@ class BurgerBuilder extends Component {
     }
     return (
       <>
-        <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelhandler}>
+        <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
         {burger}
